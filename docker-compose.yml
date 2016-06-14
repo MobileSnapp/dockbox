@@ -1,0 +1,45 @@
+version: '2.0'
+
+services:
+
+### Application Code Container ###
+
+    application:
+        build: ./application
+        volumes:
+            - ../:/var/www/site
+
+### PHP Container ###
+
+    php:
+        build:
+            context: ./php
+            dockerfile: Dockerfile
+        volumes_from:
+            - application
+        expose:
+            - "9000"
+        #links:
+        #    - workspace
+
+### Apache HTTP Container ###
+
+    apache:
+        build: ./apache
+        volumes_from:
+            - application
+        volumes:
+            - ./logs/apache/:/var/log/apache2
+        ports:
+            - "80:80"
+            - "443:443"
+        links:
+            - php
+
+### Workspace Container ###
+
+    #workspace:
+    #    build: ./workspace
+    #    volumes_from:
+    #        - application
+    #    tty: true
