@@ -63,4 +63,5 @@ WORKDIR /var/www/site
 EXPOSE 9000
 
 # Check installed version
-CMD php -v
+#CMD php -v
+CMD ["php"]
