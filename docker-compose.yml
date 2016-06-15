@@ -20,7 +20,7 @@ services:
         expose:
             - "9000"
         #links:
-        #    - workspace
+        #    - commons
 
 ### Apache HTTP Container ###
 
@@ -36,10 +36,10 @@ services:
         links:
             - php
 
-### Workspace Container ###
+### Commons ###
 
-    #workspace:
-    #    build: ./workspace
+    #commons:
+    #    build: ./commons
     #    volumes_from:
     #        - application
     #    tty: true
