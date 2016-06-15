@@ -2,7 +2,8 @@
 # Dockerfile for Application image
 ####################################
 # Base image
-FROM busybox:latest
+#FROM busybox:latest
+FROM debian:jessie
 
 # Author: MobileSnapp Inc.
 MAINTAINER MobileSnapp <support@mobilesnapp.com>

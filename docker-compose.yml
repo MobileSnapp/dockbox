@@ -19,8 +19,8 @@ services:
             - application
         expose:
             - "9000"
-        #links:
-        #    - commons
+        links:
+            - commons
 
 ### Apache HTTP Container ###
 
@@ -38,8 +38,8 @@ services:
 
 ### Commons ###
 
-    #commons:
-    #    build: ./commons
-    #    volumes_from:
-    #        - application
-    #    tty: true
+    commons:
+        build: ./commons
+        volumes_from:
+            - application
+        tty: true
