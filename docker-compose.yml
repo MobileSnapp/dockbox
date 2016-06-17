@@ -9,20 +9,7 @@ services:
         volumes:
             - ../:/var/www/site
 
-### PHP Container ###
-
-    php:
-        build:
-            context: ./php
-            dockerfile: Dockerfile
-        volumes_from:
-            - application
-        expose:
-            - "9000"
-        links:
-            - commons
-
-### Apache HTTP Container ###
+### Apache HTTP and PHP Container ###
 
     apache:
         build: ./apache
@@ -34,7 +21,7 @@ services:
             - "80:80"
             - "443:443"
         links:
-            - php
+             - commons
 
 ### Commons ###
 

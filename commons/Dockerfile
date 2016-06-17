@@ -53,7 +53,9 @@ RUN apt-get update && apt-get install -y --force-yes \
         nano \
         nodejs \
         nodejs-dev \
-        npm
+        npm \
+        graphicsmagick \
+        libgraphicsmagick1-dev
 
 # Clean up, to free some space
 RUN apt-get clean
@@ -61,7 +63,8 @@ RUN apt-get clean
 # Install gulp and bower with NPM
 RUN npm install -g \
     gulp \
-    bower
+    bower \
+    grunt-cli
 
 # Link the global gulp to be used locally
 RUN npm link gulp
