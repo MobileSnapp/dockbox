@@ -16,9 +16,7 @@ RUN apt-get update && \
     apt-get clean \
     && rm -r /var/lib/apt/lists/*
 
-# Install helper packages
-#RUN apt-get install php libapache2-mod-php php-mcrypt php-mysql
-
+# Install PHP and helper packages
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y \
@@ -41,18 +39,12 @@ ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_PID_FILE /var/run/apache2.pid
 
-# configure Apache for prefork and start server
-#RUN a2dismod mpm_event && a2enmod mpm_prefork && service apache2 restart
-
 # Assign working directory
 WORKDIR /var/www/site/
 
 # Expose web and SSL ports.
 EXPOSE 80
 EXPOSE 443
-
-# Copy test template.
-#ADD index.html /var/www/site
 
 # Update the default apache site with the config we created.
 ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
