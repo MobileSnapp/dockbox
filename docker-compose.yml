@@ -6,13 +6,50 @@ services:
 
     application:
         build: ./application
+        container_name: dockbox-app
         volumes:
             - ../:/var/www/site
+
+
+### PHP-FPM Container ###
+
+    php-fpm:
+        build:
+            context: ./php-fpm
+            dockerfile: Dockerfile
+        container_name: dockbox-php-fpm
+        volumes:
+            - ./php-fpm/php-override.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
+        volumes_from:
+            - application
+        expose:
+            - "9000"
+        links:
+            - commons
+
+
+### Nginx Server Container ####
+
+    nginx:
+        build: ./nginx
+        container_name: dockbox-nginx
+        volumes_from:
+            - application
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+            - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - "80:80"
+            - "443:443"
+        links:
+            - php-fpm
+
 
 ### Apache HTTP and PHP Container ###
 
     apache:
         build: ./apache
+        container_name: dockbox-apache
         volumes_from:
             - application
         volumes:
@@ -27,6 +64,7 @@ services:
 
     commons:
         build: ./commons
+        container_name: dockbox-commons
         volumes_from:
             - application
         tty: true
