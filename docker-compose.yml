@@ -28,6 +28,21 @@ services:
             - commons
 
 
+### Apache HTTP Container ###
+
+    apache:
+        build: ./apache
+        volumes_from:
+            - application
+        volumes:
+            - ./logs/apache/:/var/log/apache2
+        ports:
+            - "80:80"
+            - "443:443"
+        links:
+            - php
+
+
 ### Nginx Server Container ####
 
     nginx:
@@ -44,21 +59,6 @@ services:
         links:
             - php-fpm
 
-
-### Apache HTTP and PHP Container ###
-
-    apache:
-        build: ./apache
-        container_name: dockbox-apache
-        volumes_from:
-            - application
-        volumes:
-            - ./logs/apache/:/var/log/apache2
-        ports:
-            - "80:80"
-            - "443:443"
-        links:
-             - commons
 
 ### Commons ###
 
