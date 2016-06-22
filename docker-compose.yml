@@ -53,6 +53,7 @@ services:
         volumes:
             - ./logs/nginx/:/var/log/nginx
             - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
+            #- ./nginx/site.conf:/etc/nginx/sites-enabled/vhost.conf
         ports:
             - "80:80"
             - "443:443"
