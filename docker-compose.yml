@@ -32,6 +32,7 @@ services:
 
     apache:
         build: ./apache
+        container_name: dockbox-apache
         volumes_from:
             - application
         volumes:
