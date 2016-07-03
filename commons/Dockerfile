@@ -46,7 +46,6 @@ RUN apt-get update && apt-get install -y --force-yes \
         php7.0-sqlite \
         php7.0-sqlite3 \
         php7.0-bz2 \
-        php7.0-dbg \
         php7.0-enchant \
         php7.0-gd \
         php7.0-geoip \
