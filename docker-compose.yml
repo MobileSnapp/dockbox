@@ -53,7 +53,6 @@ services:
             - application
         volumes:
             - ./logs/nginx/:/var/log/nginx
-            - ./nginx/site.conf:/etc/nginx/conf.d/default.conf
         ports:
             - "80:80"
             - "443:443"
