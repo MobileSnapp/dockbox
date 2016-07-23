@@ -1,5 +1,5 @@
 ####################################
-# Dockerfile for Application image
+# Dockerfile for Data volume image
 ####################################
 # Base image
 FROM busybox:latest

@@ -4,11 +4,14 @@ services:
 
 ### Application Code Container ###
 
-    application:
-        build: ./application
-        container_name: dockbox-app
+    data:
+        build: ./data
+        container_name: dockbox-data
         volumes:
             - ../:/var/www/site
+            - ../data/memcached/:/var/lib/memcached
+            - ../data/redis/:/data
+            - ../data/mariadb/:/var/lib/mariadb
 
 
 ### PHP-FPM Container ###
@@ -21,7 +24,7 @@ services:
         volumes:
             - ./php-fpm/php-override.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
         volumes_from:
-            - application
+            - data
         expose:
             - "9000"
         links:
@@ -34,7 +37,7 @@ services:
         build: ./apache
         container_name: dockbox-apache
         volumes_from:
-            - application
+            - data
         volumes:
             - ./logs/apache/:/var/log/apache2
         ports:
@@ -50,7 +53,7 @@ services:
         build: ./nginx
         container_name: dockbox-nginx
         volumes_from:
-            - application
+            - data
         volumes:
             - ./logs/nginx/:/var/log/nginx
         ports:
@@ -60,11 +63,76 @@ services:
             - php-fpm
 
 
+### Nginx HHVM Container ####
+
+    hhvm:
+        build: ./hhvm
+        container_name: dockbox-hhvm
+        environment:
+            - VIRTUAL_HOST=nginx-hhvm.app
+        volumes_from:
+            - data
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+        ports:
+            - "80:80"
+            - "443:443"
+
+
 ### Commons ###
 
     commons:
         build: ./commons
         container_name: dockbox-commons
         volumes_from:
-            - application
+            - data
         tty: true
+
+
+### Memcached ###
+
+    memcached:
+        build: ./memcached
+        container_name: dockbox-memcached
+        volumes_from:
+            - data
+        ports:
+            - "11211:11211"
+
+
+### Redis ###
+
+    redis:
+        build: ./redis
+        container_name: dockbox-redis
+        volumes_from:
+            - data
+        ports:
+            - "6379:6379"
+
+
+### MariaDB ###
+
+    mariadb:
+        build: ./mariadb
+        container_name: dockbox-mariadb
+        volumes_from:
+            - data
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: sitedb
+            MYSQL_USER: sitedbadmin
+            MYSQL_PASSWORD: sitedbsecret
+            MYSQL_ROOT_PASSWORD: root
+
+
+### MongoDB ###
+
+    mongodb:
+        build: ./mongodb
+        container_name: dockbox-mongodb
+        volumes_from:
+            - data
+        ports:
+            - "27017:27017"
