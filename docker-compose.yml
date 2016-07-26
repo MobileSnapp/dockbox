@@ -9,9 +9,10 @@ services:
         container_name: dockbox-data
         volumes:
             - ../:/var/www/site
-            - ../data/memcached/:/var/lib/memcached
-            - ../data/redis/:/data
-            - ../data/mariadb/:/var/lib/mariadb
+            - /volume/memcached:/var/lib/memcached
+            - /volume/redis:/data
+            - /volume/mariadb:/var/lib/mariadb
+            - /volume/db:/var/lib/mysql
 
 
 ### PHP-FPM Container ###
