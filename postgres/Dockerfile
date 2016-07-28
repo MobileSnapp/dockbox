@@ -1,20 +1,13 @@
 ##################################
-# Dockerfile for MongoDB image
+# Dockerfile for Postgres image
 ##################################
 # Base image
-FROM mongo:latest
+FROM postgres:latest
 
 # Author: MobileSnapp Inc.
 MAINTAINER MobileSnapp <support@mobilesnapp.com>
 
-RUN usermod -u 1000 mongodb
-RUN chown -R `id -u` /data/db
-
-VOLUME /data/db /data/configdb
-
 # Expose port
-EXPOSE 27017
+EXPOSE 5432
 
-CMD ["mongod"]
-
-
+CMD ["postgres"]
