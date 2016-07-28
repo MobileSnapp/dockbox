@@ -163,7 +163,7 @@ services:
 
 ### MongoDB ###
 
-    mongo:
+    mongodb:
         build: ./mongodb
         container_name: dockbox-mongodb
         ports:
