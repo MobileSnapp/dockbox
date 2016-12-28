@@ -20,12 +20,10 @@ services:
 ### PHP-FPM Container ###
 
     php-fpm:
-        build:
-            context: ./php-fpm
-            dockerfile: Dockerfile
+        build: ./php-fpm
         container_name: dockbox-php-fpm
         volumes:
-            - ./php-fpm/php-override.ini:/etc/php/7.0/fpm/conf.d/99-overrides.ini
+            - ./php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
         volumes_from:
             - data
         expose:
