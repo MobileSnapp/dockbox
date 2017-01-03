@@ -4,33 +4,21 @@
 # Base image
 FROM nginx:latest
 
-# Remove the default Nginx configuration file
-RUN rm /etc/nginx/conf.d/default.conf
-RUN rm /etc/nginx/conf.d/example_ssl.conf
-#RUN rm -v /etc/nginx/nginx.conf
+# Author: MobileSnapp Inc.
+MAINTAINER MobileSnapp <support@mobilesnapp.com>
 
-# Copy custom site 
-# Comment it if using PHP
-COPY index.html /usr/share/nginx/html
+# Add docker config
+ADD nginx.conf /etc/nginx/
 
-# Copy a configuration file from the current directory
-# NOTE: Add configuration for static site
-# Comment it if using PHP
-ADD site.conf /etc/nginx/
+# Add configuration for custom site [Comment it for default site]
+ADD site.conf /etc/nginx/sites-available/
 
-# NOTE: Add configuration for PHP
-# Comment it if using static site
-#ADD nginx.conf /etc/nginx/
-
-# Append "daemon off;" to the beginning of the configuration
-RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-
-RUN chown -R www-data:www-data /var/lib/nginx
+RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled
 
 # Assign working directory
 WORKDIR /var/www/site/
 
-# Expose ports
+# Expose web and SSL ports.
 EXPOSE 80
 EXPOSE 443
 
