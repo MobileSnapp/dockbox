@@ -15,6 +15,7 @@ services:
             - /volume/mariadb:/var/lib/mariadb
             - /volume/postgres:/var/lib/postgres
             - /volume/mongo:/data/db
+            - /volume/elasticsearch:/usr/share/elasticsearch/data
 
 
 ### PHP-FPM Container ###
@@ -62,22 +63,6 @@ services:
             - "443:443"
         links:
             - php-fpm
-
-
-### Nginx HHVM Container ####
-
-    hhvm:
-        build: ./hhvm
-        container_name: dockbox-hhvm
-        environment:
-            - VIRTUAL_HOST=nginx-hhvm.app
-        volumes_from:
-            - data
-        volumes:
-            - ./logs/nginx/:/var/log/nginx
-        ports:
-            - "80:80"
-            - "443:443"
 
 
 ### Commons ###
@@ -209,3 +194,15 @@ services:
             - "5672:5672"
             - "15672:15672"
             - "25672:25672"
+
+
+### Elasticsearch ###
+
+    elasticsearch:
+        build: ./elasticsearch
+        container_name: dockbox-elasticsearch
+        volumes_from:
+            - data
+        ports:
+            - "9200:9200"
+            - "9300:9300"

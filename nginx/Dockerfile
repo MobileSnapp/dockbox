@@ -19,8 +19,7 @@ RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled
 WORKDIR /var/www/site/
 
 # Expose web and SSL ports.
-EXPOSE 80
-EXPOSE 443
+EXPOSE 80 443
 
 # Set the default command to execute
 # when creating a new container
