@@ -25,7 +25,7 @@ RUN add-apt-repository -y \
     ppa:ondrej/php
 
 # Install PHP-CLI 7, extentions and tools
-RUN apt-get update && apt-get install -y --force-yes \
+RUN apt-get update && apt-get install -y \
         php7.1-cli \
         php7.1-common \
         php7.1-curl \
@@ -86,6 +86,7 @@ RUN apt-get update && apt-get install -y --force-yes \
         libedit-dev \
         libssl-dev \
         libxml2-dev \
+        libsslcommon2-dev \
         xz-utils \
         sqlite3 \
         libsqlite3-dev \
@@ -103,6 +104,7 @@ RUN apt-get update && apt-get install -y --force-yes \
         wget \
         dialog \
         net-tools \
+        pkg-config \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Install gulp and bower with NPM
@@ -130,6 +132,7 @@ ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
 # Install mongodb extension
 RUN pecl install mongodb
 #RUN echo "extension=mongodb.so" >> /etc/php/7.1/cli/php.ini
+RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 # Source the bash
 RUN . ~/.bashrc

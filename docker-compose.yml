@@ -9,13 +9,6 @@ services:
         container_name: dockbox-data
         volumes:
             - ../:/var/www/site
-            - /volume/db:/var/lib/mysql
-            - /volume/data:/data
-            - /volume/memcached:/var/lib/memcached
-            - /volume/mariadb:/var/lib/mariadb
-            - /volume/postgres:/var/lib/postgres
-            - /volume/mongo:/data/db
-            - /volume/elasticsearch:/usr/share/elasticsearch/data
 
 
 ### PHP-FPM Container ###
@@ -82,6 +75,8 @@ services:
         container_name: dockbox-memcached
         volumes_from:
             - data
+        volumes:
+            - ./volume/memcached:/var/lib/memcached
         ports:
             - "11211:11211"
 
@@ -91,6 +86,8 @@ services:
     redis:
         build: ./redis
         container_name: dockbox-redis
+        volumes:
+            - ./volume/redis:/data
         volumes_from:
             - data
         ports:
@@ -104,6 +101,8 @@ services:
         container_name: dockbox-mariadb
         volumes_from:
             - data
+        volumes:
+            - ./volume/mariadb:/var/lib/mysql
         ports:
             - "3306:3306"
         environment:
@@ -120,6 +119,8 @@ services:
         container_name: dockbox-postgres
         volumes_from:
             - data
+        volumes:
+            - ./volume/postgres:/var/lib/postgres
         ports:
             - "5432:5432"
         environment:
@@ -135,6 +136,8 @@ services:
         container_name: dockbox-mysql
         volumes_from:
             - data
+        volumes:
+            - ./volume/mysql:/var/lib/mysql
         ports:
             - "3306:3306"
         environment:
@@ -149,11 +152,12 @@ services:
     mongodb:
         build: ./mongodb
         container_name: dockbox-mongodb
-        ports:
-            - "27017:27017"
         volumes_from:
             - data
-
+        volumes:
+            - ./volume/mongodb:/data/db
+        ports:
+            - "27017:27017"
 
 
 ### Beanstalkd ###
@@ -203,6 +207,10 @@ services:
         container_name: dockbox-elasticsearch
         volumes_from:
             - data
+        volumes:
+            - ./volume/elasticsearch:/usr/share/elasticsearch/data
         ports:
             - "9200:9200"
             - "9300:9300"
+
+

@@ -2,10 +2,10 @@
 # Dockerfile to build Elasticsearch image
 ##########################################
 # Base image
-FROM elasticsearch:alpine
+FROM elasticsearch
 
 # Author: MobileSnapp Inc.
-MAINTAINER Bo-Yi Wu <appleboy.tw@gmail.com>
+MAINTAINER MobileSnapp <support@mobilesnapp.com>
 
 # Expose ports.
 EXPOSE 9200 9300
