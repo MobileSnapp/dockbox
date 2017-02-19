@@ -18,7 +18,9 @@ ENV TERM xterm
 
 # Install "software-properties-common" (for the "add-apt-repository")
 RUN apt-get update && apt-get install -y \
-    software-properties-common
+    software-properties-common \
+    supervisor \
+&& apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Add the "PHP 7" ppa
 RUN add-apt-repository -y \
@@ -33,8 +35,6 @@ RUN apt-get update && apt-get install -y \
         php7.1-xml \
         php7.1-mcrypt \
         php7.1-zip \
-        php7.1-common \
-        php7.1-xml \
         php-memcached \
         php7.1-mcrypt \
         php7.1-mongodb \
@@ -93,6 +93,8 @@ RUN apt-get update && apt-get install -y \
         cron \
         git \
         curl \
+        zip \
+        unzip \
         vim \
         nano \
         nodejs \
@@ -138,6 +140,9 @@ RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | se
 RUN . ~/.bashrc
 
 # Clean up, to free some space
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get remove -y --purge software-properties-common \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /var/www/site
