@@ -11,9 +11,8 @@ MAINTAINER MobileSnapp <support@mobilesnapp.com>
 ADD nginx.conf /etc/nginx/
 
 # Add configuration for custom site [Comment it for default site]
-#ADD site.conf /etc/nginx/sites-available/
-
-RUN ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled
+RUN rm /etc/nginx/conf.d/default.conf
+ADD site.conf /etc/nginx/conf.d/
 
 # Assign working directory
 WORKDIR /var/www/site/
