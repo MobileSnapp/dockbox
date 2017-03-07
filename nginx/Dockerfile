@@ -2,27 +2,25 @@
 # Dockerfile to build NGINX image
 ####################################
 # Base image
-FROM nginx:latest
+FROM nginx:alpine
 
 # Author: MobileSnapp Inc.
 MAINTAINER MobileSnapp <support@mobilesnapp.com>
 
-# Add docker config
-ADD nginx.conf /etc/nginx/
+# Add page for default site
+#COPY index.html /usr/share/nginx/html
 
-# Add configuration for custom site [Comment it for default site]
+# Add configuration for custom site [Comment for default site]
 RUN rm /etc/nginx/conf.d/default.conf
-ADD site.conf /etc/nginx/conf.d/
+COPY site.conf /etc/nginx/conf.d/default.conf
 
-# Assign working directory
-WORKDIR /var/www/site/
+# Add config
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose web and SSL ports.
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+
+# Expose HTTP/HTTPS ports
 EXPOSE 80 443
 
-# Set the default command to execute
-# when creating a new container
-CMD service nginx start
-
-# Define default command.
-#CMD ["nginx"]
+ENTRYPOINT ["/usr/sbin/nginx"]

@@ -2,39 +2,27 @@ version: '2.0'
 
 services:
 
-    ### Application ###
+    ### Application Code ###
     data:
-        image: busybox:latest
+        build: ./data
         container_name: dockbox-data
         volumes:
-            - ..:/var/www/site
-        networks:
-            - dockbox-net
+            - ../:/var/www/site
 
-    ### NGINX ###
-    nginx:
-        build: ./nginx
-        container_name: dockbox-nginx
-        volumes_from:
-            - data
-        volumes:
-            - log-data:/var/log/nginx
-        ports:
-            - "80:80"
-            - "443:443"
-        networks:
-            - dockbox-net
 
     ### PHP-FPM ###
     php-fpm:
-        image: php:7-fpm
+        build: ./php-fpm
         container_name: dockbox-php-fpm
+        volumes:
+            - ./php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
         volumes_from:
             - data
         expose:
             - "9000"
-        networks:
-            - dockbox-net
+        links:
+            - commons
+
 
     ### Apache ###
     apache:
@@ -43,11 +31,37 @@ services:
         volumes_from:
             - data
         volumes:
-            - log-data:/var/log/apache2
+            - ./logs/apache/:/var/log/apache2
         ports:
             - "80:80"
-        networks:
-            - dockbox-net
+            - "443:443"
+        links:
+            - commons
+
+
+    ### Nginx ####
+    nginx:
+        build: ./nginx
+        container_name: dockbox-nginx
+        volumes_from:
+            - data
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        links:
+            - php-fpm
+
+
+    ### Commons ###
+    commons:
+        build: ./commons
+        container_name: dockbox-commons
+        volumes_from:
+            - data
+        tty: true
+
 
     ### Redis ###
     redis:
@@ -67,10 +81,6 @@ networks:
         driver: "bridge"
 
 volumes:
-
-    ### Logging Storage ###
-    log-data:
-        driver: "local"
 
     ### Redis Storage ###
     redis-data:
