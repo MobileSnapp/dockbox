@@ -1,4 +1,4 @@
-version: '2.0'
+version: '2'
 
 services:
 
@@ -13,7 +13,9 @@ services:
 
     ### NGINX ###
     nginx:
-        build: ./nginx
+        build:
+          context: ./nginx
+          dockerfile: Dockerfile
         container_name: dockbox-nginx
         volumes_from:
             - data
@@ -25,20 +27,11 @@ services:
         networks:
             - dockbox-net
 
-    ### PHP-FPM ###
-    php-fpm:
-        image: php:7-fpm
-        container_name: dockbox-php-fpm
-        volumes_from:
-            - data
-        expose:
-            - "9000"
-        networks:
-            - dockbox-net
-
     ### Apache ###
     apache:
-        build: ./apache
+        build:
+          context: ./apache
+          dockerfile: Dockerfile
         container_name: dockbox-apache
         volumes_from:
             - data
@@ -46,6 +39,53 @@ services:
             - log-data:/var/log/apache2
         ports:
             - "80:80"
+        networks:
+            - dockbox-net
+
+    ### MariaDB ###
+    mariadb:
+        image: mariadb:latest
+        container_name: dockbox-mariadb
+        volumes:
+            - database-data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: sitemariadb
+            MYSQL_USER: sitedb_maria_user
+            MYSQL_PASSWORD: sitedbsecret
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - dockbox-net
+
+    ### MySQL ###
+    mysql:
+        image: mysql:latest
+        container_name: dockbox-mysql
+        volumes:
+            - database-data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: sitemysqldb
+            MYSQL_USER: sitedb_mysql_user
+            MYSQL_PASSWORD: sitedbsecret
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - dockbox-net
+
+    ### PostgreSQL ###
+    postgres:
+        image: postgres:alpine
+        container_name: dockbox-postgres
+        volumes:
+            - database-data:/var/lib/postgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: sitepostgresdb
+            POSTGRES_USER: sitedb_postgres_user
+            POSTGRES_PASSWORD: sitedbsecret
         networks:
             - dockbox-net
 
@@ -58,7 +98,43 @@ services:
         ports:
             - "6379:6379"
         networks:
-             - dockbox-net
+            - dockbox-net
+
+    ### Node ###
+    node:
+        build:
+          context: ./node
+          dockerfile: Dockerfile
+        container_name: dockbox-node
+        volumes_from:
+            - data
+        tty: true
+        networks:
+            - dockbox-net
+
+    ### Elasticsearch ###
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+        container_name: dockbox-elasticsearch
+        volumes:
+            - elasticsearch-data:/data
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+            - dockbox-net
+
+    ### MailHog ###
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: dockbox-mailhog
+        #volumes:
+        #   - elasticsearch-data:/data
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - dockbox-net
 
 networks:
 
@@ -70,6 +146,14 @@ volumes:
 
     ### Logging Storage ###
     log-data:
+        driver: "local"
+
+    ### Database Storage ###
+    database-data:
+        driver: "local"
+
+    ### Elasticsearch Storage ###
+    elasticsearch-data:
         driver: "local"
 
     ### Redis Storage ###
