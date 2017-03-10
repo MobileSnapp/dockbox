@@ -89,6 +89,18 @@ services:
         networks:
             - dockbox-net
 
+
+    ### Mongo ###
+    mongo:
+        image: mongo:latest
+        container_name: dockbox-mongo
+        volumes:
+            - mongo-data:/data/db
+        ports:
+            - "27017:27017"
+        networks:
+            - dockbox-net
+
     ### Redis ###
     redis:
         image: redis:alpine
@@ -97,6 +109,15 @@ services:
             - redis-data:/data
         ports:
             - "6379:6379"
+        networks:
+            - dockbox-net
+
+    ### Memcached ###
+    memcached:
+        image: memcached:alpine
+        container_name: dockbox-memcached
+        ports:
+            - "11211:11211"
         networks:
             - dockbox-net
 
@@ -117,7 +138,7 @@ services:
         image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
         container_name: dockbox-elasticsearch
         volumes:
-            - elasticsearch-data:/data
+            - elasticsearch-data:/usr/share/elasticsearch/data
         ports:
             - "9200:9200"
             - "9300:9300"
@@ -152,10 +173,14 @@ volumes:
     database-data:
         driver: "local"
 
-    ### Elasticsearch Storage ###
-    elasticsearch-data:
-        driver: "local"
-
     ### Redis Storage ###
     redis-data:
+        driver: "local"
+
+    ### Mongo Storage ###
+    mongo-data:
+        driver: "local"
+
+    ### Elasticsearch Storage ###
+    elasticsearch-data:
         driver: "local"
