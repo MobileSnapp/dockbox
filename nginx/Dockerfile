@@ -19,13 +19,17 @@ RUN apt-get update \
     && apt-get update \
     && apt-get install -y php7.1-fpm php7.1-cli php7.1-mcrypt php7.1-gd php7.1-mysql \
        php7.1-pgsql php7.1-imap php-memcached php7.1-mbstring php7.1-xml php7.1-curl \
-       php7.1-bcmath php7.1-sqlite3 php7.0-xdebug \
+       php7.1-bcmath php7.1-sqlite3 php7.1-xdebug \
+    && apt-get -y --no-install-recommends install php-redis php7.1-bz2 php7.1-dba php7.1-enchant \
+       php-gearman php-igbinary php-imagick php7.1-interbase php7.1-intl php7.1-ldap php-msgpack \
+       php7.1-odbc php7.1-phpdbg php7.1-pspell php-raphf php7.1-recode php7.1-snmp php7.1-soap \
+       php-ssh2 php7.1-sybase php7.1-tidy php7.1-xmlrpc php7.1-xsl php-yaml php-tideways php-xhprof php-zmq \
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && mkdir /run/php \
     && apt-get remove -y --purge software-properties-common \
     && apt-get -y autoremove \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
     && echo "daemon off;" >> /etc/nginx/nginx.conf \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log

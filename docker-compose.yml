@@ -121,6 +121,39 @@ services:
         networks:
             - dockbox-net
 
+    ### RabbitMQ ###
+    rabbitmq:
+        image: rabbitmq:alpine
+        container_name: dockbox-rabbitmq
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "DBHUpCzhPaM7"
+        ports:
+            - "4369:4369"
+            - "5671:5671"
+            - "5672:5672"
+            - "25672:25672"
+        links:
+            - rabbitmq-manage
+        networks:
+            - dockbox-net
+
+    ### RabbitMQ Management ###
+    rabbitmq-manage:
+        image: rabbitmq:management-alpine
+        container_name: dockbox-rabbitmq-manage
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "DBHUpCzhPaM7"
+            RABBITMQ_DEFAULT_USER: "mquser"
+            RABBITMQ_DEFAULT_PASS: "mqpassword"
+            RABBITMQ_DEFAULT_VHOST: "/"
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+        ports:
+            - "15671:15671"
+            - "15672:15672"
+        networks:
+            - dockbox-net
+
     ### Node ###
     node:
         build:
@@ -149,8 +182,8 @@ services:
     mailhog:
         image: mailhog/mailhog:latest
         container_name: dockbox-mailhog
-        #volumes:
-        #   - elasticsearch-data:/data
+        volumes:
+           - mailhog-data:/home/mailhog
         ports:
             - "1025:1025"
             - "8025:8025"
@@ -181,6 +214,14 @@ volumes:
     mongo-data:
         driver: "local"
 
+    ### RabbitMQ Storage ###
+    rabbitmq-data:
+        driver: "local"
+
     ### Elasticsearch Storage ###
     elasticsearch-data:
+        driver: "local"
+
+    ### Mailhog Storage ###
+    mailhog-data:
         driver: "local"
