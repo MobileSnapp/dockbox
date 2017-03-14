@@ -125,6 +125,23 @@ services:
         networks:
             - dockbox-net
 
+
+    ### Minio Cloud Storage ###
+    minio:
+        image: minio/minio:latest
+        container_name: dockbox-minio
+        volumes:
+            - minio-data:/export
+        environment:
+            MINIO_ACCESS_KEY: "miniouser"
+            MINIO_SECRET_KEY: "miniosecret"
+        ports:
+            - "9000:9000"
+        command: "server /home/shared"
+        networks:
+            - dockbox-net
+
+
     ### Memcached ###
     memcached:
         image: memcached:alpine
@@ -265,6 +282,10 @@ volumes:
 
     ### Database Storage ###
     database-data:
+        driver: "local"
+
+    ### Minio Storage ###
+    minio-data:
         driver: "local"
 
     ### Redis Storage ###
