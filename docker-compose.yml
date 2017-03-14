@@ -42,6 +42,19 @@ services:
         networks:
             - dockbox-net
 
+    ### HHVM ###
+    hhvm:
+        build:
+          context: ./hhvm
+          dockerfile: Dockerfile
+        container_name: dockbox-hhvm
+        volumes_from:
+            - data
+        ports:
+            - "8080:80"
+        networks:
+            - dockbox-net
+
     ### MariaDB ###
     mariadb:
         image: mariadb:latest

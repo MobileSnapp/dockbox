@@ -18,6 +18,7 @@ RUN  apk update && apk upgrade && \
 
     apk add libressl && \
     apk add curl openssl && \
+    apk add apache2-proxy && \
 
     apk add php7 php7-apache2 php7-openssl php7-mbstring && \
     apk add php7-apcu php7-intl php7-mcrypt php7-json php7-gd php7-curl && \
