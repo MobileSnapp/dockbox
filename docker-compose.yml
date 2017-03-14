@@ -224,6 +224,21 @@ services:
             - dockbox-net
 
 
+    ### Neo4j ###
+    neo4j:
+        image: neo4j:latest
+        container_name: dockbox-neo4j
+        volumes:
+            - neo4j-data:/data
+        environment:
+            - NEO4J_AUTH=neo4j/secret
+        ports:
+            - "7474:7474"
+            - "7687:7687"
+        networks:
+            - dockbox-net
+
+
     ### MailHog ###
     mailhog:
         image: mailhog/mailhog:latest
@@ -266,6 +281,10 @@ volumes:
 
     ### Elasticsearch Storage ###
     elasticsearch-data:
+        driver: "local"
+
+    ### Neo4j Storage ###
+    neo4j-data:
         driver: "local"
 
     ### Mailhog Storage ###
