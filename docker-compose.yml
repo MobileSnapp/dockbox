@@ -167,6 +167,37 @@ services:
         networks:
             - dockbox-net
 
+
+    ### Beanstalkd ###
+    beanstalkd:
+        build:
+          context: ./beanstalkd/queue
+          dockerfile: Dockerfile
+        container_name: dockbox-beanstalkd
+        ports:
+            - "11300:11300"
+        links:
+            - beanstalkd-console
+        networks:
+            - dockbox-net
+
+
+    ### Beanstalkd Console ###
+    beanstalkd-console:
+        build:
+          context: ./beanstalkd/console
+          dockerfile: Dockerfile
+        container_name: dockbox-beanstalkd-console
+        environment:
+            AUTH: "enable"
+            AUTH_USERNAME: "admin"
+            AUTH_PASSWORD: "password"
+        ports:
+            - "2080:2080"
+        networks:
+            - dockbox-net
+
+
     ### Node ###
     node:
         build:
@@ -179,6 +210,7 @@ services:
         networks:
             - dockbox-net
 
+
     ### Elasticsearch ###
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
@@ -190,6 +222,7 @@ services:
             - "9300:9300"
         networks:
             - dockbox-net
+
 
     ### MailHog ###
     mailhog:
