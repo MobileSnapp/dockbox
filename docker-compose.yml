@@ -11,6 +11,7 @@ services:
         networks:
             - dockbox-net
 
+
     ### NGINX ###
     nginx:
         build:
@@ -27,6 +28,7 @@ services:
         networks:
             - dockbox-net
 
+
     ### Apache ###
     apache:
         build:
@@ -42,6 +44,7 @@ services:
         networks:
             - dockbox-net
 
+
     ### HHVM ###
     hhvm:
         build:
@@ -51,9 +54,10 @@ services:
         volumes_from:
             - data
         ports:
-            - "8080:80"
+            - "8000:80"
         networks:
             - dockbox-net
+
 
     ### MariaDB ###
     mariadb:
@@ -65,11 +69,12 @@ services:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: sitemariadb
-            MYSQL_USER: sitedb_maria_user
+            MYSQL_USER: sitedb_user
             MYSQL_PASSWORD: sitedbsecret
             MYSQL_ROOT_PASSWORD: root
         networks:
             - dockbox-net
+
 
     ### MySQL ###
     mysql:
@@ -81,11 +86,12 @@ services:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: sitemysqldb
-            MYSQL_USER: sitedb_mysql_user
+            MYSQL_USER: sitedb_user
             MYSQL_PASSWORD: sitedbsecret
             MYSQL_ROOT_PASSWORD: root
         networks:
             - dockbox-net
+
 
     ### PostgreSQL ###
     postgres:
@@ -97,8 +103,10 @@ services:
             - "5432:5432"
         environment:
             POSTGRES_DB: sitepostgresdb
-            POSTGRES_USER: sitedb_postgres_user
+            POSTGRES_USER: sitedb_user
             POSTGRES_PASSWORD: sitedbsecret
+        links:
+            - pgadmin
         networks:
             - dockbox-net
 
@@ -111,17 +119,6 @@ services:
             - mongo-data:/data/db
         ports:
             - "27017:27017"
-        networks:
-            - dockbox-net
-
-    ### Redis ###
-    redis:
-        image: redis:alpine
-        container_name: dockbox-redis
-        volumes:
-            - redis-data:/data
-        ports:
-            - "6379:6379"
         networks:
             - dockbox-net
 
@@ -142,6 +139,30 @@ services:
             - dockbox-net
 
 
+    ### RethinkDB ###
+    rethinkdb:
+        image: rethinkdb:latest
+        container_name: dockbox-rethinkdb
+        volumes:
+            - rethinkdb-data:/data
+        ports:
+            - "8008:8080"
+        networks:
+            - dockbox-net
+
+
+    ### Redis ###
+    redis:
+        image: redis:alpine
+        container_name: dockbox-redis
+        volumes:
+            - redis-data:/data
+        ports:
+            - "6379:6379"
+        networks:
+            - dockbox-net
+
+
     ### Memcached ###
     memcached:
         image: memcached:alpine
@@ -150,6 +171,7 @@ services:
             - "11211:11211"
         networks:
             - dockbox-net
+
 
     ### RabbitMQ ###
     rabbitmq:
@@ -166,6 +188,7 @@ services:
             - rabbitmq-manage
         networks:
             - dockbox-net
+
 
     ### RabbitMQ Management ###
     rabbitmq-manage:
@@ -268,6 +291,98 @@ services:
         networks:
             - dockbox-net
 
+
+    ### Docker Local Registry ###
+    docker-registry:
+        image: registry:latest
+        container_name: dockbox-registry
+        volumes:
+            - registry-data:/var/lib/registry
+        ports:
+            - "5000:5000"
+        networks:
+            - dockbox-net
+
+
+    ### phpmyadmin [web interface for MySQL and MariaDB] ###
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: dockbox-phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: sitedb_user
+            MYSQL_PASSWORD: sitedbsecret
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "8080:80"
+        links:
+            # for mysql container
+            - "mysql:db"
+            # for mariadb container
+            # - "mariadb:db"
+        networks:
+            - dockbox-net
+
+
+    ### pgadmin [administration and management tool for PostgreSQL] ###
+    pgadmin:
+        image: fenglc/pgadmin4:latest
+        container_name: dockbox-pgadmin
+        ports:
+            - "5050:5050"
+        networks:
+            - dockbox-net
+
+
+    ### Selenium Hub ###
+    selenium-hub:
+        image: selenium/hub:latest
+        container_name: dockbox-selenium-hub
+        privileged: true
+        ports:
+            - "4444:4444"
+        environment:
+            - GRID_TIMEOUT=120000
+            - GRID_BROWSER_TIMEOUT=120000
+        networks:
+            - dockbox-net
+
+
+
+    ### Selenium Firefox Node ###
+    selenium-firefox-node:
+        image: selenium/node-firefox:latest
+        container_name: dockbox-selenium-firefox-node
+        privileged: true
+        depends_on:
+            - selenium-hub
+        ports:
+            - 5900
+        environment:
+            - no_proxy=localhost
+            - HUB_PORT_4444_TCP_ADDR=selenium-hub
+            - HUB_PORT_4444_TCP_PORT=4444
+        networks:
+            - dockbox-net
+
+
+    ### Selenium Chrome Node ###
+    selenium-chrome-node:
+        image: selenium/node-chrome:latest
+        container_name: dockbox-selenium-chrome-node
+        privileged: true
+        depends_on:
+            - selenium-hub
+        ports:
+            - 5900
+        environment:
+            - no_proxy=localhost
+            - HUB_PORT_4444_TCP_ADDR=selenium-hub
+            - HUB_PORT_4444_TCP_PORT=4444
+        networks:
+            - dockbox-net
+
+
 networks:
 
     ### Bridged Network ###
@@ -282,6 +397,10 @@ volumes:
 
     ### Database Storage ###
     database-data:
+        driver: "local"
+
+    ### Database Storage ###
+    rethinkdb-data:
         driver: "local"
 
     ### Minio Storage ###
@@ -310,4 +429,8 @@ volumes:
 
     ### Mailhog Storage ###
     mailhog-data:
+        driver: "local"
+
+    ### Registry Storage ###
+    registry-data:
         driver: "local"
