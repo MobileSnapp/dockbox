@@ -1,7 +1,6 @@
-# dockbox - Dockerize your PHP development
+# dockbox - Dockerize your PHP development ![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://www.mobilesnapp.com)
-![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
 ![docker](https://s3-us-west-2.amazonaws.com/svgporn.com/logos/docker.svg)
 
