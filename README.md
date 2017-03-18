@@ -31,7 +31,31 @@ Dockbox gives you everything you need for developing PHP applications locally. I
 - RethinkDB
 - Minio
 
+#### Cache Engines
+- Redis
+- Memcached
 
+#### Web Servers/Compilers
+- Apache2
+- Nginx
+- PHP (included in Apache2 container)
+- PHP-FPM (included in Nginx container)
+- HHVM
+
+#### Message Queues
+- Beanstalkd (includes console)
+- RabbitMQ (includes console)
+
+#### Management Consoles
+- PhpMyAdmin (for MySQL/MariaDB)
+- PgAdmin (for PostgreSQL)
+
+#### Additional
+- Elasticsearch
+- Node
+- Mailhog
+- Selenium Grid
+- Docker Registry
 
 
 ## Web Configuration
