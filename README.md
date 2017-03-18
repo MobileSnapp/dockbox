@@ -1,7 +1,7 @@
 # dockbox - Dockerize your PHP development
 
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://www.mobilesnapp.com)
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://www.mobilesnapp.com)
+[![forthebadge](http://forthebadge.com/images/badges/cc-0.svg)](http://www.mobilesnapp.com)
 
 
 ![docker](https://s3-us-west-2.amazonaws.com/svgporn.com/logos/docker.svg)
