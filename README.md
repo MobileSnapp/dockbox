@@ -2,8 +2,6 @@
 
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://www.mobilesnapp.com)
 
-
-
 ![docker](https://s3-us-west-2.amazonaws.com/svgporn.com/logos/docker.svg)
 
 Dockbox allows you to containerize your PHP application. 
@@ -24,7 +22,7 @@ Dockbox gives you everything you need for developing PHP applications locally. I
 
 ## Supported Containers
 
-### Database Engines
+#### Database Engines
 - MySQL
 - MariaDB
 - PostgreSQL
