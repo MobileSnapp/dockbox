@@ -130,12 +130,12 @@ docker-compose up -d nginx mysql
 You can select your own combination of containers form the list below:
 > nginx (PHP_FPM included), apache, hhvm, mariadb, mysql, postgres, mongo, minio, rethinkdb, redis, memcached, rabbitmq, beanstalkd, node, elasticsearch, neo4j, mailhog, selenium grid and more…!
 
-*Note:* The data container will run automatically in most of the cases, so no need to specify them in the up command. It will setup the project folder and stop. 
+**Note:** The data container will run automatically in most of the cases, so no need to specify them in the up command. It will setup the project folder and stop. 
 
 Dockbox is setup to run management console with the following containers:
 > mariadb, mysql, progres, rabbitmq, beanstalkd
 
-Comment 'links' section in 'docker-compose' file to detach the management console.
+*Comment 'links' section in 'docker-compose' file to detach the management console.*
 
 4. Enter apache/nginx container, to execute commands like (Composer, PHPUnit …):
 For apache: 
@@ -164,6 +164,34 @@ REDIS_HOST=dockbox-redis
 QUEUE_HOST=dockbox-rabbitmq
 
 7.  Open your browser and visit localhost: http://localhost.
+
+
+### Run Commands
+
+Container  | Command   |
+---------- | --------- |
+apache                | docker-compose up -d apache                |
+nginx                 | docker-compose up -d nginx                 |
+hhvm                  | docker-compose up -d hhvm                  |
+mariadb               | docker-compose up -d mariadb               |
+mysql                 | docker-compose up -d mysql                 |
+postgres              | docker-compose up -d postgres              |
+mongo                 | docker-compose up -d mongo                 |
+minio                 | docker-compose up -d minio                 |
+rethinkdb             | docker-compose up -d rethinkdb             |
+redis                 | docker-compose up -d redis                 |
+memcached             | docker-compose up -d memcached             |
+rabbitmq              | docker-compose up -d rabbitmq              |
+beanstalkd            | docker-compose up -d beanstalkd            |
+node                  | docker-compose up -d node                  |
+elasticsearch         | docker-compose up -d elasticsearch         |
+neo4j                 | docker-compose up -d neo4j                 |
+mailhog               | docker-compose up -d mailhog               |      
+docker registry       | docker-compose up -d docker-registry       |
+selenium chrome node  | docker-compose up -d selenium-chrome-node  |
+selenium firefox node | docker-compose up -d selenium-firefox-node |
+ 
+**Note:** Selenium chrome/firefox node will bring up Selenium Hub container and attach to Selenium Hub.
 
 
 ## License
