@@ -86,7 +86,9 @@ QUEUE_HOST=dockbox-rabbitmq
 
 Dockbox currently follows generic 'Zend/Laravel/Lumen' folder structure assuming that the hosting files are loacated under 'public' directory. Support for other framework (Symfony, Phalcon, Silex) coming soon.
 
-```Web root folder: '/var/www/site/public'```
+```
+Web root folder: '/var/www/site/public'
+```
 
 For Apache, default web configuration setup is available as dockbox default. Uncomment custom configuration in apache/Dockerfile for custom/generic (Zend/Laravel/Lumen) configuration.
 
@@ -95,17 +97,43 @@ For Apache, default web configuration setup is available as dockbox default. Unc
 Granting permisssion to database users
 
 ##### MySQL/MariaDB
-```'GRANT ALL PRIVILEGES ON * . * TO 'sitedb_user'@'localhost';'```
+```
+'GRANT ALL PRIVILEGES ON * . * TO 'sitedb_user'@'localhost';'
+```
 More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql)
 
 ##### PosgreSQL
-```'ALTER USER sitedb_user WITH SUPERUSER;'```
+```
+'ALTER USER sitedb_user WITH SUPERUSER;'
+```
 More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-roles-and-manage-grant-permissions-in-postgresql-on-a-vps--2)
 
+
 ## Installation and Usage
+
+1. Clone dockbox inside your PHP project (Zend/Laravel/Lumen):
+```
+git clone https://github.com/MobileSnapp/dockbox.git
 ```
 
+Your folder structure should look like this:
 ```
++ php-project
+    + project files & folders
+	+ dockbox
+```
+
+5. Run your containers:
+docker-compose up -d nginx mysql redis rabbitmq elasticsearch
+
+6. (For Laravel) Open your project’s .env file and set the following:
+DB_HOST=dockbox-mysql
+REDIS_HOST=dockbox-redis
+QUEUE_HOST=dockbox-rabbitmq
+
+7.  Open your browser and visit localhost: http://localhost.
+
+
 
 
 ## License
