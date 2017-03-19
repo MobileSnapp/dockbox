@@ -116,24 +116,54 @@ More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/ho
 git clone https://github.com/MobileSnapp/dockbox.git
 ```
 
-Your folder structure should look like this:
+2. Your folder structure should look like this:
 ```
 + php-project
     + project files & folders
 	+ dockbox
 ```
 
-5. Run your containers:
-docker-compose up -d nginx mysql redis rabbitmq elasticsearch
+3. Build the enviroment and run it using docker-compose:
+Run NGINX (web server) and MySQL (database engine) to host a PHP web project:
+```
+docker-compose up -d nginx mysql
+```
+You can select your own combination of containers form the list below:
+> nginx (PHP_FPM included), apache, hhvm, mariadb, mysql, postgres, mongo, minio, rethinkdb, redis, memcached, rabbitmq, beanstalkd, node, elasticsearch, neo4j, mailhog, selenium grid and more…!
 
-6. (For Laravel) Open your project’s .env file and set the following:
+*Note:* The data container will run automatically in most of the cases, so no need to specify them in the up command. It will setup the project folder and stop. 
+
+Dockbox is setup to run management console with the following containers:
+> mariadb, mysql, progres, rabbitmq, beanstalkd
+Comment 'links' section in 'docker-compose' file to detach the management console.
+
+4. Enter apache/nginx container, to execute commands like (Composer, PHPUnit …):
+For apache: 
+```
+docker-compose exec dockbox-apache bash
+```
+
+For nginx:
+```
+docker-compose exec dockbox-nginx bash
+```
+
+Alternatively, for Windows PowerShell users: execute the following command to enter any running container:
+```
+docker exec -it {workspace-container-id} bash
+```
+
+5. Enter the node container, to execute commands like (Artisan, Gulp, …):
+```
+docker-compose exec dockbox-node bash
+```
+
+6. Update your project configurations:
 DB_HOST=dockbox-mysql
 REDIS_HOST=dockbox-redis
 QUEUE_HOST=dockbox-rabbitmq
 
 7.  Open your browser and visit localhost: http://localhost.
-
-
 
 
 ## License
