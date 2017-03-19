@@ -119,8 +119,7 @@ git clone https://github.com/MobileSnapp/dockbox.git
 2. Your folder structure should look like this:
 ```
 + php-project
-    + project files & folders
-	+ dockbox
+    + dockbox
 ```
 
 3. Build the enviroment and run it using docker-compose:
@@ -135,6 +134,7 @@ You can select your own combination of containers form the list below:
 
 Dockbox is setup to run management console with the following containers:
 > mariadb, mysql, progres, rabbitmq, beanstalkd
+
 Comment 'links' section in 'docker-compose' file to detach the management console.
 
 4. Enter apache/nginx container, to execute commands like (Composer, PHPUnit …):
