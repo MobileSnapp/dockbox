@@ -86,7 +86,7 @@ QUEUE_HOST=dockbox-rabbitmq
 
 Dockbox currently follows generic 'Zend/Laravel/Lumen' folder structure assuming that the hosting files are loacated under 'public' directory. Support for other framework (Symfony, Phalcon, Silex) coming soon.
 
-Web root folder: '/var/www/site/public' 
+```Web root folder: '/var/www/site/public'```
 
 For Apache, default web configuration setup is available as dockbox default. Uncomment custom configuration in apache/Dockerfile for custom/generic (Zend/Laravel/Lumen) configuration.
 
@@ -94,12 +94,12 @@ For Apache, default web configuration setup is available as dockbox default. Unc
 
 Granting permisssion to database users
 
-##### MySQL
-'GRANT ALL PRIVILEGES ON * . * TO 'sitedb_user'@'localhost';'
+##### MySQL/MariaDB
+```'GRANT ALL PRIVILEGES ON * . * TO 'sitedb_user'@'localhost';'```
 More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql)
 
 ##### PosgreSQL
-'ALTER USER sitedb_user WITH SUPERUSER;'
+```'ALTER USER sitedb_user WITH SUPERUSER;'```
 More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-roles-and-manage-grant-permissions-in-postgresql-on-a-vps--2)
 
 ## Installation and Usage
