@@ -1,5 +1,7 @@
 # dockbox - Dockerize your PHP development
 
+> Dockerized PHP development stack: Nginx, Apache2, PHP-FPM, HHVM, MySQL, MariaDB, PostgreSQL, MongoDB, Neo4j, RethinkDB, Minio, Redis, Memcached, Beanstalkd, RabbitMQ and Elasticsearch.
+
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://www.mobilesnapp.com)
 
 Dockbox allows you to containerize your PHP application. 
@@ -8,7 +10,21 @@ Dockbox gives you everything you need for developing PHP applications locally. I
 
 ## Quick Setup
 
+```
+# Clone dockbox inside your PHP project (Laravel):
+git clone https://github.com/MobileSnapp/dockbox.git
 
+# Run your containers:
+docker-compose up -d nginx mysql redis rabbitmq elasticsearch
+
+# (For Laravel) Open your project’s .env file and set the following:
+DB_HOST=dockbox-mysql
+REDIS_HOST=dockbox-redis
+QUEUE_HOST=dockbox-rabbitmq
+
+# Open your browser and visit localhost: http://localhost.
+
+```
 
 ## Features
 
@@ -60,3 +76,9 @@ Dockbox gives you everything you need for developing PHP applications locally. I
 
 ## Database Configuration
 
+
+
+# License
+
+* Copyright 2017 [MobileSnapp Inc.](http://www.mobilesnapp.com)
+* Distributed under the MIT License (hereby included)
