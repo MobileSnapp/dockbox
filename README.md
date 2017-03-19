@@ -23,7 +23,6 @@ REDIS_HOST=dockbox-redis
 QUEUE_HOST=dockbox-rabbitmq
 
 # Open your browser and visit localhost: http://localhost.
-
 ```
 
 ## Features
@@ -35,7 +34,7 @@ QUEUE_HOST=dockbox-rabbitmq
 5. Clean and well structured Dockerfiles (Dockerfile).
 6. Choose your favorite database engine: MySQL, Postgres, MariaDB…
 7. Run your own combination of software: Memcached, HHVM, Beanstalkd…
-8. Pre-configured NGINX for Laravel.
+8. Pre-configured NGINX for Laravel. (Setup for Symfony, Phalcon and Silex coming soon...)
 
 
 ## Supported Containers
@@ -83,12 +82,30 @@ QUEUE_HOST=dockbox-rabbitmq
 * [Docker Machine](https://docs.docker.com/machine/) (Mac and Windows only)
 
 
-
-
 ## Web Configuration
+
+Dockbox currently follows generic 'Zend/Laravel/Lumen' folder structure assuming that the hosting files are loacated under 'public' directory. Support for other framework (Symfony, Phalcon, Silex) coming soon.
+
+Web root folder: '/var/www/site/public' 
+
+For Apache, default web configuration setup is available as dockbox default. Uncomment custom configuration in apache/Dockerfile for custom/generic (Zend/Laravel/Lumen) configuration.
 
 ## Database Configuration
 
+Granting permisssion to database users
+
+##### MySQL
+'GRANT ALL PRIVILEGES ON * . * TO 'sitedb_user'@'localhost';'
+More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-create-a-new-user-and-grant-permissions-in-mysql)
+
+##### PosgreSQL
+'ALTER USER sitedb_user WITH SUPERUSER;'
+More details: [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-use-roles-and-manage-grant-permissions-in-postgresql-on-a-vps--2)
+
+## Installation and Usage
+```
+
+```
 
 
 ## License
