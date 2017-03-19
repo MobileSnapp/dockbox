@@ -32,6 +32,10 @@ QUEUE_HOST=dockbox-rabbitmq
 2. Every software runs as a separate container
 3. Easy to apply configurations inside containers.
 4. Faster image and container builds.
+5. Clean and well structured Dockerfiles (Dockerfile).
+6. Choose your favorite database engine: MySQL, Postgres, MariaDB…
+7. Run your own combination of software: Memcached, HHVM, Beanstalkd…
+8. Pre-configured NGINX for Laravel.
 
 
 ## Supported Containers
@@ -72,13 +76,22 @@ QUEUE_HOST=dockbox-rabbitmq
 - Docker Registry
 
 
+## Requirements
+
+* [Docker Engine](https://docs.docker.com/installation/)
+* [Docker Compose](https://docs.docker.com/compose/)
+* [Docker Machine](https://docs.docker.com/machine/) (Mac and Windows only)
+
+
+
+
 ## Web Configuration
 
 ## Database Configuration
 
 
 
-# License
+## License
 
 * Copyright 2017 [MobileSnapp Inc.](http://www.mobilesnapp.com)
 * Distributed under the MIT License (hereby included)
