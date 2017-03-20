@@ -2,22 +2,16 @@
 # Dockerfile for Beanstalkd console image
 ###########################################
 # Base image
-FROM php:latest
+FROM php:7-alpine
 
 # Author: MobileSnapp Inc.
 MAINTAINER MobileSnapp <support@mobilesnapp.com>
 
-RUN apt-get update && apt-get install -y curl
+ADD install.sh install.sh
+RUN chmod +x install.sh
+RUN ./install.sh && rm install.sh
 
-# Install beanstalkd console
-RUN curl -sL https://github.com/ptrofimov/beanstalk_console/archive/master.tar.gz | tar xvz -C /tmp
-RUN mv /tmp/beanstalk_console-master /source
-
-RUN apt-get remove --purge -y curl \
-    && apt-get autoclean \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY config.php /source/config.php
 
 EXPOSE 2080
-
-CMD bash -c 'BEANSTALK_SERVERS=$BEANSTALKD_PORT_11300_TCP_ADDR:11300 php -S 0.0.0.0:2080 -t /source/public'
+CMD sh -c 'BEANSTALK_SERVERS=$BEANSTALKD_PORT_11300_TCP_ADDR:11300 php -S 0.0.0.0:2080 -t /source/public'

@@ -1,216 +1,436 @@
-version: '2.0'
+version: '2'
 
 services:
 
-### Application Code Container ###
-
+    ### Application ###
     data:
-        build: ./data
+        image: busybox:latest
         container_name: dockbox-data
         volumes:
-            - ../:/var/www/site
+            - ..:/var/www/site
+        networks:
+            - dockbox-net
 
 
-### PHP-FPM Container ###
-
-    php-fpm:
-        build: ./php-fpm
-        container_name: dockbox-php-fpm
-        volumes:
-            - ./php-fpm/php-ini-overrides.ini:/etc/php/7.1/fpm/conf.d/99-overrides.ini
-        volumes_from:
-            - data
-        expose:
-            - "9000"
-        links:
-            - commons
-
-
-### Apache HTTP Container ###
-
-    apache:
-        build: ./apache
-        container_name: dockbox-apache
-        volumes_from:
-            - data
-        volumes:
-            - ./logs/apache/:/var/log/apache2
-        ports:
-            - "80:80"
-            - "443:443"
-        links:
-            - commons
-
-
-### Nginx Server Container ####
-
+    ### NGINX ###
     nginx:
-        build: ./nginx
+        build:
+          context: ./nginx
+          dockerfile: Dockerfile
         container_name: dockbox-nginx
         volumes_from:
             - data
         volumes:
-            - ./logs/nginx/:/var/log/nginx
+            - log-data:/var/log/nginx
         ports:
             - "80:80"
             - "443:443"
-        links:
-            - php-fpm
+        networks:
+            - dockbox-net
 
 
-### Commons ###
-
-    commons:
-        build: ./commons
-        container_name: dockbox-commons
-        volumes_from:
-            - data
-        tty: true
-
-
-### Memcached ###
-
-    memcached:
-        build: ./memcached
-        container_name: dockbox-memcached
+    ### Apache ###
+    apache:
+        build:
+          context: ./apache
+          dockerfile: Dockerfile
+        container_name: dockbox-apache
         volumes_from:
             - data
         volumes:
-            - ./volume/memcached:/var/lib/memcached
+            - log-data:/var/log/apache2
         ports:
-            - "11211:11211"
+            - "80:80"
+        networks:
+            - dockbox-net
 
 
-### Redis ###
-
-    redis:
-        build: ./redis
-        container_name: dockbox-redis
-        volumes:
-            - ./volume/redis:/data
+    ### HHVM ###
+    hhvm:
+        build:
+          context: ./hhvm
+          dockerfile: Dockerfile
+        container_name: dockbox-hhvm
         volumes_from:
             - data
         ports:
-            - "6379:6379"
+            - "8000:80"
+        networks:
+            - dockbox-net
 
 
-### MariaDB ###
-
+    ### MariaDB ###
     mariadb:
-        build: ./mariadb
+        image: mariadb:latest
         container_name: dockbox-mariadb
-        volumes_from:
-            - data
         volumes:
-            - ./volume/mariadb:/var/lib/mysql
+            - database-data:/var/lib/mysql
         ports:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: sitemariadb
-            MYSQL_USER: sitedb_maria_user
+            MYSQL_USER: sitedb_user
             MYSQL_PASSWORD: sitedbsecret
             MYSQL_ROOT_PASSWORD: root
+        networks:
+            - dockbox-net
 
 
-### PostgreSQL ###
-
-    postgres:
-        build: ./postgres
-        container_name: dockbox-postgres
-        volumes_from:
-            - data
-        volumes:
-            - ./volume/postgres:/var/lib/postgres
-        ports:
-            - "5432:5432"
-        environment:
-            POSTGRES_DB: sitepostgresdb
-            POSTGRES_USER: sitedb_postgres_user
-            POSTGRES_PASSWORD: sitedbsecret
-
-
-### MySQL ###
-
+    ### MySQL ###
     mysql:
-        build: ./mysql
+        image: mysql:latest
         container_name: dockbox-mysql
-        volumes_from:
-            - data
         volumes:
-            - ./volume/mysql:/var/lib/mysql
+            - database-data:/var/lib/mysql
         ports:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: sitemysqldb
-            MYSQL_USER: sitedb_mysql_user
+            MYSQL_USER: sitedb_user
             MYSQL_PASSWORD: sitedbsecret
             MYSQL_ROOT_PASSWORD: root
+        networks:
+            - dockbox-net
 
 
-### MongoDB ###
-
-    mongodb:
-        build: ./mongodb
-        container_name: dockbox-mongodb
-        volumes_from:
-            - data
+    ### PostgreSQL ###
+    postgres:
+        image: postgres:alpine
+        container_name: dockbox-postgres
         volumes:
-            - ./volume/mongodb:/data/db
+            - database-data:/var/lib/postgres
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_DB: sitepostgresdb
+            POSTGRES_USER: sitedb_user
+            POSTGRES_PASSWORD: sitedbsecret
+        links:
+            - pgadmin
+        networks:
+            - dockbox-net
+
+
+    ### Mongo ###
+    mongo:
+        image: mongo:latest
+        container_name: dockbox-mongo
+        volumes:
+            - mongo-data:/data/db
         ports:
             - "27017:27017"
+        networks:
+            - dockbox-net
 
 
-### Beanstalkd ###
-
-    beanstalkd:
-        build: ./beanstalkd/queue
-        container_name: dockbox-beanstalkd
+    ### Minio Cloud Storage ###
+    minio:
+        image: minio/minio:latest
+        container_name: dockbox-minio
+        volumes:
+            - minio-data:/export
+        environment:
+            MINIO_ACCESS_KEY: "miniouser"
+            MINIO_SECRET_KEY: "miniosecret"
         ports:
-            - "11300:11300"
-        privileged: true
-        links:
-            - commons
+            - "9000:9000"
+        command: "server /home/shared"
+        networks:
+            - dockbox-net
 
 
-
-### Beanstalkd Console ###
-
-    beanstalkd-console:
-        build: ./beanstalkd/console
-        container_name: dockbox-beanstalkd-console
+    ### RethinkDB ###
+    rethinkdb:
+        image: rethinkdb:latest
+        container_name: dockbox-rethinkdb
+        volumes:
+            - rethinkdb-data:/data
         ports:
-            - "2080:2080"
-        links:
-            - beanstalkd
+            - "8008:8080"
+        networks:
+            - dockbox-net
 
 
+    ### Redis ###
+    redis:
+        image: redis:alpine
+        container_name: dockbox-redis
+        volumes:
+            - redis-data:/data
+        ports:
+            - "6379:6379"
+        networks:
+            - dockbox-net
 
-### RabbitMQ ###
 
+    ### Memcached ###
+    memcached:
+        image: memcached:alpine
+        container_name: dockbox-memcached
+        ports:
+            - "11211:11211"
+        networks:
+            - dockbox-net
+
+
+    ### RabbitMQ ###
     rabbitmq:
-        build: ./rabbitmq
+        image: rabbitmq:alpine
         container_name: dockbox-rabbitmq
-        volumes_from:
-            - data
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "DBHUpCzhPaM7"
         ports:
             - "4369:4369"
             - "5671:5671"
             - "5672:5672"
-            - "15672:15672"
             - "25672:25672"
+        links:
+            - rabbitmq-manage
+        networks:
+            - dockbox-net
 
 
-### Elasticsearch ###
+    ### RabbitMQ Management ###
+    rabbitmq-manage:
+        image: rabbitmq:management-alpine
+        container_name: dockbox-rabbitmq-manage
+        environment:
+            RABBITMQ_ERLANG_COOKIE: "DBHUpCzhPaM7"
+            RABBITMQ_DEFAULT_USER: "mquser"
+            RABBITMQ_DEFAULT_PASS: "mqpassword"
+            RABBITMQ_DEFAULT_VHOST: "/"
+        volumes:
+            - rabbitmq-data:/var/lib/rabbitmq
+        ports:
+            - "15671:15671"
+            - "15672:15672"
+        networks:
+            - dockbox-net
 
-    elasticsearch:
-        build: ./elasticsearch
-        container_name: dockbox-elasticsearch
+
+    ### Beanstalkd ###
+    beanstalkd:
+        build:
+          context: ./beanstalkd/queue
+          dockerfile: Dockerfile
+        container_name: dockbox-beanstalkd
+        ports:
+            - "11300:11300"
+        links:
+            - beanstalkd-console
+        networks:
+            - dockbox-net
+
+
+    ### Beanstalkd Console ###
+    beanstalkd-console:
+        build:
+          context: ./beanstalkd/console
+          dockerfile: Dockerfile
+        container_name: dockbox-beanstalkd-console
+        environment:
+            AUTH: "enable"
+            AUTH_USERNAME: "admin"
+            AUTH_PASSWORD: "password"
+        ports:
+            - "2080:2080"
+        networks:
+            - dockbox-net
+
+
+    ### Node ###
+    node:
+        build:
+          context: ./node
+          dockerfile: Dockerfile
+        container_name: dockbox-node
         volumes_from:
             - data
+        tty: true
+        networks:
+            - dockbox-net
+
+
+    ### Elasticsearch ###
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.2.2
+        container_name: dockbox-elasticsearch
         volumes:
-            - ./volume/elasticsearch:/usr/share/elasticsearch/data
+            - elasticsearch-data:/usr/share/elasticsearch/data
         ports:
             - "9200:9200"
             - "9300:9300"
+        networks:
+            - dockbox-net
 
 
+    ### Neo4j ###
+    neo4j:
+        image: neo4j:latest
+        container_name: dockbox-neo4j
+        volumes:
+            - neo4j-data:/data
+        environment:
+            - NEO4J_AUTH=neo4j/secret
+        ports:
+            - "7474:7474"
+            - "7687:7687"
+        networks:
+            - dockbox-net
+
+
+    ### MailHog ###
+    mailhog:
+        image: mailhog/mailhog:latest
+        container_name: dockbox-mailhog
+        volumes:
+           - mailhog-data:/home/mailhog
+        ports:
+            - "1025:1025"
+            - "8025:8025"
+        networks:
+            - dockbox-net
+
+
+    ### Docker Local Registry ###
+    docker-registry:
+        image: registry:latest
+        container_name: dockbox-registry
+        volumes:
+            - registry-data:/var/lib/registry
+        ports:
+            - "5000:5000"
+        networks:
+            - dockbox-net
+
+
+    ### phpmyadmin [web interface for MySQL and MariaDB] ###
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        container_name: dockbox-phpmyadmin
+        environment:
+            PMA_ARBITRARY: 1
+            MYSQL_USER: sitedb_user
+            MYSQL_PASSWORD: sitedbsecret
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "8080:80"
+        links:
+            # for mysql container
+            - "mysql:db"
+            # for mariadb container
+            # - "mariadb:db"
+        networks:
+            - dockbox-net
+
+
+    ### pgadmin [administration and management tool for PostgreSQL] ###
+    pgadmin:
+        image: fenglc/pgadmin4:latest
+        container_name: dockbox-pgadmin
+        ports:
+            - "5050:5050"
+        networks:
+            - dockbox-net
+
+
+    ### Selenium Hub ###
+    selenium-hub:
+        image: selenium/hub:latest
+        container_name: dockbox-selenium-hub
+        privileged: true
+        ports:
+            - "4444:4444"
+        environment:
+            - GRID_TIMEOUT=120000
+            - GRID_BROWSER_TIMEOUT=120000
+        networks:
+            - dockbox-net
+
+
+
+    ### Selenium Firefox Node ###
+    selenium-firefox-node:
+        image: selenium/node-firefox:latest
+        container_name: dockbox-selenium-firefox-node
+        privileged: true
+        depends_on:
+            - selenium-hub
+        ports:
+            - 5900
+        environment:
+            - no_proxy=localhost
+            - HUB_PORT_4444_TCP_ADDR=selenium-hub
+            - HUB_PORT_4444_TCP_PORT=4444
+        networks:
+            - dockbox-net
+
+
+    ### Selenium Chrome Node ###
+    selenium-chrome-node:
+        image: selenium/node-chrome:latest
+        container_name: dockbox-selenium-chrome-node
+        privileged: true
+        depends_on:
+            - selenium-hub
+        ports:
+            - 5900
+        environment:
+            - no_proxy=localhost
+            - HUB_PORT_4444_TCP_ADDR=selenium-hub
+            - HUB_PORT_4444_TCP_PORT=4444
+        networks:
+            - dockbox-net
+
+
+networks:
+
+    ### Bridged Network ###
+    dockbox-net:
+        driver: "bridge"
+
+volumes:
+
+    ### Logging Storage ###
+    log-data:
+        driver: "local"
+
+    ### Database Storage ###
+    database-data:
+        driver: "local"
+
+    ### Database Storage ###
+    rethinkdb-data:
+        driver: "local"
+
+    ### Minio Storage ###
+    minio-data:
+        driver: "local"
+
+    ### Redis Storage ###
+    redis-data:
+        driver: "local"
+
+    ### Mongo Storage ###
+    mongo-data:
+        driver: "local"
+
+    ### RabbitMQ Storage ###
+    rabbitmq-data:
+        driver: "local"
+
+    ### Elasticsearch Storage ###
+    elasticsearch-data:
+        driver: "local"
+
+    ### Neo4j Storage ###
+    neo4j-data:
+        driver: "local"
+
+    ### Mailhog Storage ###
+    mailhog-data:
+        driver: "local"
+
+    ### Registry Storage ###
+    registry-data:
+        driver: "local"
