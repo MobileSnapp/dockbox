@@ -31,10 +31,7 @@ QUEUE_HOST=dockbox-rabbitmq
 2. Every software runs as a separate container
 3. Easy to apply configurations inside containers.
 4. Faster image and container builds.
-5. Clean and well structured Dockerfiles (Dockerfile).
-6. Choose your favorite database engine: MySQL, Postgres, MariaDB…
-7. Run your own combination of software: Memcached, HHVM, Beanstalkd…
-8. Pre-configured NGINX for Laravel. (Setup for Symfony, Phalcon and Silex coming soon...)
+5. Pre-configured NGINX for Laravel. (Setup for Symfony, Phalcon and Silex coming soon...)
 
 
 ## Supported Containers
@@ -192,6 +189,15 @@ selenium chrome node  | docker-compose up -d selenium-chrome-node  |
 selenium firefox node | docker-compose up -d selenium-firefox-node |
  
 **Note:** Selenium chrome/firefox node will bring up Selenium Hub container and attach to Selenium Hub.
+
+
+### References
+
+1. [Docker for php developers](http://www.newmediacampaigns.com/blog/docker-for-php-developers)
+2. [PHP Web development with docker](http://mmenozzi.github.io/2016/01/22/php-web-development-with-docker/)
+3. [webdevops docker](https://github.com/webdevops/Dockerfile)
+4. [laradock](https://github.com/LaraDock/laradock)
+5. [php-dockerized](https://github.com/kasperisager/php-dockerized)
 
 
 ## License
