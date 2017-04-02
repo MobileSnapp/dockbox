@@ -163,7 +163,7 @@ QUEUE_HOST=dockbox-rabbitmq
 7.  Open your browser and visit localhost: http://localhost.
 
 
-### Run Commands
+## Run Commands
 
 Container  | Command   |
 ---------- | --------- |
@@ -191,7 +191,7 @@ selenium firefox node | docker-compose up -d selenium-firefox-node |
 **Note:** Selenium chrome/firefox node will bring up Selenium Hub container and attach to Selenium Hub.
 
 
-### References
+## References
 
 1. [Docker for php developers](http://www.newmediacampaigns.com/blog/docker-for-php-developers)
 2. [PHP Web development with docker](http://mmenozzi.github.io/2016/01/22/php-web-development-with-docker/)
