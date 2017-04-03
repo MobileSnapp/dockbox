@@ -1,10 +1,8 @@
-# dockbox - PHP development environment with Docker
+# dockbox - Dockerize your PHP development
 
 > Dockerized PHP development stack: Nginx, Apache2, PHP-FPM, HHVM, MySQL, MariaDB, PostgreSQL, MongoDB, Neo4j, RethinkDB, Minio, Redis, Memcached, Beanstalkd, RabbitMQ and Elasticsearch.
 
 [![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://www.mobilesnapp.com)
-
-### Dockerize your PHP development
 
 Dockbox allows you to containerize your PHP application. 
 
