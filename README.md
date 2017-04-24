@@ -126,7 +126,7 @@ Run NGINX (web server) and MySQL (database engine) to host a PHP web project:
 docker-compose up -d nginx mysql
 ```
 You can select your own combination of containers form the list below:
-> nginx (PHP_FPM included), apache, hhvm, mariadb, mysql, postgres, mongo, minio, rethinkdb, redis, memcached, rabbitmq, beanstalkd, node, elasticsearch, neo4j, mailhog, selenium grid and more…!
+> nginx (PHP_FPM included), apache, hhvm, mariadb, mysql, postgres, mongo, minio, rethinkdb, orientdb, redis, memcached, rabbitmq, beanstalkd, node, elasticsearch, neo4j, mailhog, selenium grid and more…!
 
 **Note:** The data container will run automatically in most of the cases, so no need to specify them in the up command. It will setup the project folder and stop. 
 
