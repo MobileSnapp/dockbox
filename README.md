@@ -44,6 +44,7 @@ QUEUE_HOST=dockbox-rabbitmq
 - Neo4j
 - RethinkDB
 - Minio
+- OrientDB
 
 #### Cache Engines
 - Redis
@@ -176,6 +177,7 @@ postgres              | docker-compose up -d postgres              |
 mongo                 | docker-compose up -d mongo                 |
 minio                 | docker-compose up -d minio                 |
 rethinkdb             | docker-compose up -d rethinkdb             |
+orientdb              | docker-compose up -d orientdb              |
 redis                 | docker-compose up -d redis                 |
 memcached             | docker-compose up -d memcached             |
 rabbitmq              | docker-compose up -d rabbitmq              |

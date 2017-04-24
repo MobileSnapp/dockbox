@@ -151,6 +151,38 @@ services:
             - dockbox-net
 
 
+    ### Neo4j ###
+    neo4j:
+        image: neo4j:latest
+        container_name: dockbox-neo4j
+        volumes:
+            - neo4j-data:/data
+        environment:
+            - NEO4J_AUTH=neo4j/secret
+        ports:
+            - "7474:7474"
+            - "7687:7687"
+        networks:
+            - dockbox-net
+
+
+    ### OrientDB ###
+    orientdb:
+        image: orientdb:latest
+        container_name: dockbox-orientdb
+        volumes:
+            - orientdb-data:/orientdb/databases
+            - orientdb-config:/orientdb/config
+            - orientdb-backup:/orientdb/backup
+        environment:
+            ORIENTDB_ROOT_PASSWORD: root
+        ports:
+            - "2424:2424"
+            - "2480:2480"
+        networks:
+            - dockbox-net
+
+
     ### Redis ###
     redis:
         image: redis:alpine
@@ -260,21 +292,6 @@ services:
         ports:
             - "9200:9200"
             - "9300:9300"
-        networks:
-            - dockbox-net
-
-
-    ### Neo4j ###
-    neo4j:
-        image: neo4j:latest
-        container_name: dockbox-neo4j
-        volumes:
-            - neo4j-data:/data
-        environment:
-            - NEO4J_AUTH=neo4j/secret
-        ports:
-            - "7474:7474"
-            - "7687:7687"
         networks:
             - dockbox-net
 
@@ -415,16 +432,28 @@ volumes:
     mongo-data:
         driver: "local"
 
+    ### Neo4j Storage ###
+    neo4j-data:
+        driver: "local"
+
+    ### OriendDB Data Storage ###
+    orientdb-data:
+        driver: "local"
+
+    ### OriendDB Config Storage ###
+    orientdb-config:
+        driver: "local"
+
+    ### OriendDB Backup Storage ###
+    orientdb-backup:
+        driver: "local"
+
     ### RabbitMQ Storage ###
     rabbitmq-data:
         driver: "local"
 
     ### Elasticsearch Storage ###
     elasticsearch-data:
-        driver: "local"
-
-    ### Neo4j Storage ###
-    neo4j-data:
         driver: "local"
 
     ### Mailhog Storage ###
